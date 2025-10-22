@@ -410,6 +410,7 @@ if mods.bztitanium then
       icon_size = 128,
       category = "chemistry",
       subgroup = "intermediate-product",
+      main_product = "ti-sapphire",
       order = "zz[sapphire-ti]",
       enabled = false,
       energy_required = 10,
