@@ -1,5 +1,5 @@
 -- Enriched Lead for Krastorio2
-local util = require("data-util");
+local util = require("data-util")
 
 if mods["Krastorio2"] then
 data:extend(
@@ -17,7 +17,7 @@ data:extend(
     },
     subgroup = "raw-material",
     order = "e05-a[enriched-ores]-a1[enriched-aluminum]",
-    stack_size = 100
+    stack_size = util.get_stack_size(100)
   },
   {
     type = "recipe",

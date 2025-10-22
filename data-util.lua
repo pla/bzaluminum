@@ -64,6 +64,17 @@ function util.fe_plus(sub)
   end
 end
 
+function util.k2()
+  return mods.Krastorio2 or mods["Krastorio2-spaced-out"]
+end
+
+function util.get_stack_size(default)
+  if util.k2() and kr_adjust_stack_sizes then
+    return tonumber(200)
+  end
+  return default
+end
+
 function util.k2assets()
   if mods["Krastorio2Assets"] then
     return "__Krastorio2Assets__"

@@ -1,7 +1,7 @@
 -- Aluminum smelting
 
-local util = require("data-util");
-local futil = require("util");
+local util = require("data-util")
+local futil = require("util")
 
 local alumina_results = {}
 
@@ -81,7 +81,7 @@ data:extend({
     },
     subgroup = "raw-material",
     order = "b[alumina]",
-    stack_size = 100
+    stack_size = util.get_stack_size(100)
   },
   {
     type = "item",
@@ -90,7 +90,7 @@ data:extend({
     icon_size = 128,
     subgroup = "raw-material",
     order = "b[aluminum-plate]",
-    stack_size = 100
+    stack_size = util.get_stack_size(100)
   },
 })
 
@@ -170,7 +170,7 @@ data:extend({
     icon_size = 64, icon_mipmaps = 4,
     subgroup = util.cablesg,
     order = "b[aaac-cable]",
-    stack_size = 100,
+    stack_size = util.get_stack_size(100),
   },
   {
     type = "recipe",
@@ -189,7 +189,7 @@ data:extend({
     icon_size = 128,
     subgroup = util.cablesg,
     order = "b[acsr-cable]",
-    stack_size = 50,
+    stack_size = util.get_stack_size(50),
   },
   {
     type = "recipe",
@@ -258,7 +258,7 @@ data:extend({
     icon_size = 128,
     subgroup = "intermediate-product",
     order = "b[spark-plug]",
-    stack_size = 100,
+    stack_size = util.get_stack_size(100),
   },
   {
     type = "recipe",
@@ -298,7 +298,7 @@ data:extend({
     icon_size = 128,
     subgroup = "raw-material",
     order = "zz[aluminum-6061]",
-    stack_size = 100,
+    stack_size = util.get_stack_size(100),
   },
   {
     type = "recipe",
@@ -357,7 +357,7 @@ data:extend({
     icon_size = 128,
     subgroup = "raw-material",
     order = "zz[aluminum-2219]",
-    stack_size = 100,
+    stack_size = util.get_stack_size(100),
   },
   {
     type = "recipe",
@@ -401,7 +401,7 @@ if mods.bztitanium then
       icon_size = 128,
       subgroup = "intermediate-product",
       order = "zz[sapphire-ti]",
-      stack_size = 50,
+      stack_size = util.get_stack_size(50),
     },
     {
       type = "recipe",
