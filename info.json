@@ -1,7 +1,7 @@
 {
     "name": "bzaluminum",
-    "version": "2.0.0",
-    "factorio_version": "2.0",
+    "version": "2.1.0",
+    "factorio_version": "2.1",
     "title": "Aluminum",
     "author": "Brevven",
     "contact": "",
@@ -9,7 +9,7 @@
     "dependencies": [
       "base >= 2.0.0",
       "bzfoundry",
-      "~ bz-dsr-bridge",
+      "? bz-dsr-bridge",
       "? bztitanium >= 2.0.26",
       "? bzlead >= 2.0.28",
       "? bzzirconium >= 2.1.13",

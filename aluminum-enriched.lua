@@ -25,7 +25,7 @@ data:extend(
     main_product = "enriched-aluminum",
     icon = "__bzaluminum__/graphics/icons/enriched-aluminum.png",
     icon_size = 128,
-    category = "chemistry",
+    categories = {"chemistry"},
     energy_required = 3,
     enabled = false,
     always_show_made_in = true,
@@ -60,7 +60,7 @@ data:extend(
         { icon = "__bzaluminum__/graphics/icons/alumina.png", icon_size = 128 },
         { icon = "__bzaluminum__/graphics/icons/enriched-aluminum.png", icon_size = 128, scale=0.125, shift= {-8, -8}},
       },
-      category = "smelting",
+      categories = {"smelting"},
       energy_required = 16,
       enabled = false,
       always_show_made_in = true,
@@ -73,7 +73,7 @@ data:extend(
 	{
 		type = "recipe",
 		name = "dirty-water-filtration-aluminum",
-		category = "kr-fluid-filtration",
+		categories = {"kr-fluid-filtration"},
 		icons =
 		{
 			{
@@ -101,8 +101,8 @@ data:extend(
 		{
 			{type = "fluid", name = "water", amount = 90, catalyst_amount = 90},
 			mods.bzsilicon and util.me.byproduct() and {type = "item",  name = "silica", amount = 1} or 
-			{type = "item",  name = "stone", probability = 0.40, amount = 1},
-			{type = "item",  name = "aluminum-ore", probability = 0.10, amount = 1},
+			{type = "item",  name = "stone", independent_probability = 0.40, amount = 1},
+			{type = "item",  name = "aluminum-ore", independent_probability = 0.10, amount = 1},
 		},
 		crafting_machine_tint =
 		{

@@ -1,5 +1,5 @@
 -- Additional recipes if Space Exploration mod is enabled
-local util = require("data-util");
+local util = require("data-util")
 
 if mods["space-exploration"] then
   se_delivery_cannon_recipes["aluminum-ore"] = {name= "aluminum-ore"}
@@ -61,7 +61,7 @@ if mods["space-exploration"] then
   },
   {
     type = "recipe",
-    category = "smelting",
+    categories = {"smelting"},
     name = "molten-aluminum",
     main_product = "molten-aluminum",
     subgroup = "aluminum",
@@ -81,7 +81,7 @@ if mods["space-exploration"] then
   {
     type = "recipe",
     name = "aluminum-ingot",
-    category = "casting",
+    categories = {"casting"},
     results = {{type="item", name="aluminum-ingot", amount=1}},
     energy_required = 25,
     ingredients = {
@@ -93,7 +93,7 @@ if mods["space-exploration"] then
   },
   {
     type = "recipe",
-    category = "crafting",
+    categories = {"crafting"},
     name = "aluminum-ingot-to-plate",
 
     icons = {

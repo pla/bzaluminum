@@ -69,7 +69,7 @@ function util.k2()
 end
 
 function util.get_stack_size(default)
-  if util.k2() and kr_adjust_stack_sizes then
+  if util.k2() and KR.adjust_stack_sizes then
     return tonumber(200)
   end
   return default
@@ -109,7 +109,7 @@ function util.se_landfill(params)
         energy_required = 1,
         enabled=false,
         name = lname,
-        category = "hard-recycling",
+        categories = {"hard-recycling"},
         order = "z-b-"..params.ore,
         subgroup = "terrain",
         results = {{type="item", name="landfill", amount=1}},
@@ -120,12 +120,11 @@ function util.se_landfill(params)
   end
 end
 
-
--- k2 matter 
+-- k2 matter
 -- params: {k2matter}, k2baseicon , {icon}
 function util.k2matter(params)
   local matter = require("__Krastorio2__/prototypes/libraries/matter")
-  if mods["space-exploration"] then 
+  if mods["space-exploration"] then
     params.k2matter.need_stabilizer = true
   end
   if not params.k2matter.minimum_conversion_quantity then
@@ -134,140 +133,170 @@ function util.k2matter(params)
   if not data.raw.technology[params.k2matter.unlocked_by_technology] then
     local icon = ""
     if params.k2baseicon then
-      icon = util.k2assets().."/technologies/matter-"..params.k2baseicon..".png"
+      icon = util.k2assets() .. "/technologies/matter-" .. params.k2baseicon .. ".png"
     else
-      icon = util.k2assets().."/technologies/backgrounds/matter.png"
+      icon = util.k2assets() .. "/technologies/backgrounds/matter.png"
     end
-    
-    data:extend(
-        {
+
+    data:extend({
+      {
+        type = "technology",
+        name = params.k2matter.unlocked_by_technology,
+        icons = {
           {
-            type = "technology",
-            name = params.k2matter.unlocked_by_technology,
-            icons =
-            {
-              {
-                icon = icon,
-                icon_size = 256,
-              },
-              params.icon,
-            },
-            prerequisites = {"kr-matter-processing"},
-            unit =
-            {
-              count = 350,
-              ingredients = mods["space-exploration"] and 
-              {
-                {"automation-science-pack", 1},
-                {"logistic-science-pack", 1},
-                {"chemical-science-pack", 1},
-                {"se-astronomic-science-pack-4", 1},
-                {"se-energy-science-pack-4", 1},
-                {"se-material-science-pack-4", 1},
-                {"se-deep-space-science-pack-2", 1},
-                {"se-kr-matter-science-pack-2", 1},
-              } or
-              {
-                {"production-science-pack", 1},
-                {"utility-science-pack", 1},
-                {"kr-matter-tech-card", 1}
-              },
-              time = 45,
-            },
-            localised_name = {"technology-name.k2-conversion", {"item-name."..params.k2matter.item_name}},
+            icon = icon,
+            icon_size = 256,
           },
-        })
+          params.icon,
+        },
+        prerequisites = { "kr-matter-processing" },
+        unit = {
+          count = 350,
+          ingredients = mods["space-exploration"] and {
+            { "automation-science-pack", 1 },
+            { "logistic-science-pack", 1 },
+            { "chemical-science-pack", 1 },
+            { "se-astronomic-science-pack-4", 1 },
+            { "se-energy-science-pack-4", 1 },
+            { "se-material-science-pack-4", 1 },
+            { "se-deep-space-science-pack-2", 1 },
+            { "se-kr-matter-science-pack-2", 1 },
+          } or {
+            { "production-science-pack", 1 },
+            { "utility-science-pack", 1 },
+            { "kr-matter-tech-card", 1 },
+          },
+          time = 45,
+        },
+        localised_name = { "technology-name.k2-conversion", { "item-name." .. params.k2matter.item_name } },
+      },
+    })
   end
   matter.make_recipes(params.k2matter)
 end
-
 
 -- se matter
 -- params: ore, energy_required, quant_out, quant_in, icon_size, stream_out
 function util.se_matter(params)
   if mods["space-exploration"] > "0.6" then
-    if not params.quant_in then params.quant_in = params.quant_out end
-    if not params.icon_size then params.icon_size = 64 end
-    local fname = "matter-fusion-"..params.ore
+    if not params.quant_in then
+      params.quant_in = params.quant_out
+    end
+    if not params.icon_size then
+      params.icon_size = 64
+    end
+    local fname = "matter-fusion-" .. params.ore
     local sedata = mods.Krastorio2 and "se-kr-matter-synthesis-data" or "se-fusion-test-data"
     local sejunk = mods.Krastorio2 and "se-broken-data" or "se-junk-data"
     data:extend({
       {
         type = "recipe",
         name = fname,
-        localised_name = {"recipe-name.se-matter-fusion-to", {"item-name."..params.ore}},
-        category = "space-materialisation",
+        localised_name = { "recipe-name.se-matter-fusion-to", { "item-name." .. params.ore } },
+        categories = { "space-materialisation" },
         subgroup = "materialisation",
         order = "a-b-z",
         icons = {
-          {icon = "__space-exploration-graphics__/graphics/blank.png",
-           icon_size = 64, scale = 0.5},
-          {icon = "__space-exploration-graphics__/graphics/icons/fluid/particle-stream.png",
-           icon_size = 64,  scale = 0.33, shift = {8,-8}},
-          {icon = "__"..util.me.name.."__/graphics/icons/"..params.ore..".png",
-           icon_size = params.icon_size, scale = 0.33 * 64/params.icon_size, shift={-8, 8}},
-          {icon = "__space-exploration-graphics__/graphics/icons/transition-arrow.png",
-           icon_size = 64, scale = 0.5},
+          { icon = "__space-exploration-graphics__/graphics/blank.png", icon_size = 64, scale = 0.5 },
+          {
+            icon = "__space-exploration-graphics__/graphics/icons/fluid/particle-stream.png",
+            icon_size = 64,
+            scale = 0.33,
+            shift = { 8, -8 },
+          },
+          {
+            icon = "__" .. util.me.name .. "__/graphics/icons/" .. params.ore .. ".png",
+            icon_size = params.icon_size,
+            scale = 0.33 * 64 / params.icon_size,
+            shift = { -8, 8 },
+          },
+          {
+            icon = "__space-exploration-graphics__/graphics/icons/transition-arrow.png",
+            icon_size = 64,
+            scale = 0.5,
+          },
         },
         energy_required = params.energy_required,
         enabled = false,
         ingredients = {
-          {type="item", name=sedata, amount=1},
-          {type="fluid", name="se-particle-stream", amount=50},
-          {type="fluid", name="se-space-coolant-supercooled", amount=25},
+          { type = "item", name = sedata, amount = 1 },
+          { type = "fluid", name = "se-particle-stream", amount = 50 },
+          { type = "fluid", name = "se-space-coolant-supercooled", amount = 25 },
         },
         results = {
-          {type="item", name=params.ore, amount=params.quant_out},
-          {type="item", name="se-contaminated-scrap", amount=1},
-          {type="item", name=sedata, amount=1, probability=.99},
-          {type="item", name=sejunk, amount=1, probability=.01},
-          {type="fluid", name="se-space-coolant-hot", amount=25, ignored_by_productivity=25, ignored_by_stats=25},
-        }
-      }
+          { type = "item", name = params.ore, amount = params.quant_out },
+          { type = "item", name = "se-contaminated-scrap", amount = 1 },
+          { type = "item", name = sedata, amount = 1, independent_probability = 0.99 },
+          { type = "item", name = sejunk, amount = 1, independent_probability = 0.01 },
+          {
+            type = "fluid",
+            name = "se-space-coolant-hot",
+            amount = 25,
+            ignored_by_productivity = 25,
+            ignored_by_stats = 25,
+          },
+        },
+      },
     })
-    util.add_unlock("se-space-matter-fusion", fname) 
+    util.add_unlock("se-space-matter-fusion", fname)
 
     if mods.Krastorio2 then
-      local lname = params.ore.."-to-particle-stream"
+      local lname = params.ore .. "-to-particle-stream"
       data:extend({
         enabled = false,
         {
           type = "recipe",
           name = lname,
-          localised_name = {"recipe-name.se-kr-matter-liberation", {"item-name."..params.ore}},
-          category = "space-materialisation",
+          localised_name = { "recipe-name.se-kr-matter-liberation", { "item-name." .. params.ore } },
+          categories = { "space-materialisation" },
           subgroup = "advanced-particle-stream",
           order = "a-b-z",
           icons = {
-            {icon = "__space-exploration-graphics__/graphics/blank.png",
-             icon_size = 64, scale = 0.5},
-            {icon = "__space-exploration-graphics__/graphics/icons/fluid/particle-stream.png",
-             icon_size = 64,  scale = 0.33, shift = {-8,8}},
-            {icon = "__"..util.me.name.."__/graphics/icons/"..params.ore..".png",
-             icon_size = params.icon_size, scale = 0.33 * 64/params.icon_size, shift={8, -8}},
-            {icon = "__space-exploration-graphics__/graphics/icons/transition-arrow.png",
-             icon_size = 64, scale = 0.5},
+            { icon = "__space-exploration-graphics__/graphics/blank.png", icon_size = 64, scale = 0.5 },
+            {
+              icon = "__space-exploration-graphics__/graphics/icons/fluid/particle-stream.png",
+              icon_size = 64,
+              scale = 0.33,
+              shift = { -8, 8 },
+            },
+            {
+              icon = "__" .. util.me.name .. "__/graphics/icons/" .. params.ore .. ".png",
+              icon_size = params.icon_size,
+              scale = 0.33 * 64 / params.icon_size,
+              shift = { 8, -8 },
+            },
+            {
+              icon = "__space-exploration-graphics__/graphics/icons/transition-arrow.png",
+              icon_size = 64,
+              scale = 0.5,
+            },
           },
           energy_required = 30,
           enabled = false,
           ingredients = {
-            {type="item", name="se-kr-matter-liberation-data", amount=1},
-            {type="item", name=params.ore, amount=params.quant_in},
-            {type="fluid", name="se-particle-stream", amount=50},
+            { type = "item", name = "se-kr-matter-liberation-data", amount = 1 },
+            { type = "item", name = params.ore, amount = params.quant_in },
+            { type = "fluid", name = "se-particle-stream", amount = 50 },
           },
           results = {
-            {type="item", name="se-kr-matter-liberation-data", amount=1, probability=.99},
-            {type="item", name=sejunk, amount=1, probability=.01},
-            {type="fluid", name="se-particle-stream", amount=params.stream_out, ignored_by_productivity=50, ignored_by_stats=50},
-          }
-        }
+            { type = "item", name = "se-kr-matter-liberation-data", amount = 1, independent_probability = 0.99 },
+            { type = "item", name = sejunk, amount = 1, independent_probability = 0.01 },
+            {
+              type = "fluid",
+              name = "se-particle-stream",
+              amount = params.stream_out,
+              ignored_by_productivity = 50,
+              ignored_by_stats = 50,
+            },
+          },
+        },
       })
       if not data.raw.technology["bz-advanced-stream-production"] then
         data:extend({
           {
             type = "technology",
-            name ="bz-advanced-stream-production",
-            localised_name = {"", {"technology-name.se-kr-advanced-stream-production"}, " 2"},
+            name = "bz-advanced-stream-production",
+            localised_name = { "", { "technology-name.se-kr-advanced-stream-production" }, " 2" },
             icon = "__space-exploration-graphics__/graphics/technology/material-fabricator.png",
             icon_size = 128,
             effects = {},
@@ -275,26 +304,25 @@ function util.se_matter(params)
               count = 100,
               time = 15,
               ingredients = {
-                {"automation-science-pack", 1},
-                {"logistic-science-pack", 1},
-                {"chemical-science-pack", 1},
-                {"se-rocket-science-pack", 1},
-                {"space-science-pack", 1},
-                {"production-science-pack", 1},
-                {"utility-science-pack", 1},
-                {"se-astronomic-science-pack-4", 1},
-                {"se-energy-science-pack-4", 1},
-                {"se-material-science-pack-4", 1},
-                {"kr-matter-tech-card", 1},
-                {"se-deep-space-science-pack-1", 1},
-              }
-              
+                { "automation-science-pack", 1 },
+                { "logistic-science-pack", 1 },
+                { "chemical-science-pack", 1 },
+                { "se-rocket-science-pack", 1 },
+                { "space-science-pack", 1 },
+                { "production-science-pack", 1 },
+                { "utility-science-pack", 1 },
+                { "se-astronomic-science-pack-4", 1 },
+                { "se-energy-science-pack-4", 1 },
+                { "se-material-science-pack-4", 1 },
+                { "kr-matter-tech-card", 1 },
+                { "se-deep-space-science-pack-1", 1 },
+              },
             },
-            prerequisites = {"se-kr-advanced-stream-production"},
+            prerequisites = { "se-kr-advanced-stream-production" },
           },
         })
       end
-      util.add_unlock("bz-advanced-stream-production", lname) 
+      util.add_unlock("bz-advanced-stream-production", lname)
     end
   end
 end
@@ -318,11 +346,13 @@ function util.add_prerequisite(technology_name, prerequisite)
   if technology and data.raw.technology[prerequisite] then
     if technology.prerequisites then
       for i, pre in pairs(technology.prerequisites) do
-        if pre == prerequisite then return end
+        if pre == prerequisite then
+          return
+        end
       end
       table.insert(technology.prerequisites, prerequisite)
     else
-      technology.prerequisites = {prerequisite}
+      technology.prerequisites = { prerequisite }
     end
   end
 end
@@ -344,12 +374,13 @@ function util.remove_prerequisite(technology_name, prerequisite)
   end
 end
 
-
 -- Add an effect to a given technology
 function util.add_effect(technology_name, effect)
   local technology = data.raw.technology[technology_name]
   if technology then
-    if not technology.effects then technology.effects = {} end
+    if not technology.effects then
+      technology.effects = {}
+    end
     if effect and effect.type == "unlock-recipe" then
       if not data.raw.recipe[effect.recipe] then
         return
@@ -361,7 +392,7 @@ end
 
 -- Add an effect to a given technology to unlock recipe
 function util.add_unlock(technology_name, recipe)
-  util.add_effect(technology_name, {type="unlock-recipe", recipe=recipe})
+  util.add_effect(technology_name, { type = "unlock-recipe", recipe = recipe })
 end
 
 -- Check if a tech unlocks a recipe
@@ -377,27 +408,25 @@ function util.check_unlock(technology_name, recipe)
   return false
 end
 
-
-
 -- remove recipe unlock effect from a given technology, multiple times if necessary
 function util.remove_recipe_effect(technology_name, recipe_name)
-    local technology = data.raw.technology[technology_name]
-    local index = -1
-    local cnt = 0
-    if technology and technology.effects then
-        for i, effect in pairs(technology.effects) do
-            if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
-                index = i
-                cnt = cnt + 1
-            end
-        end
-        if index > -1 then
-            table.remove(technology.effects, index)
-            if cnt > 1 then -- not over yet, do it again
-                util.remove_recipe_effect(technology_name, recipe_name)
-            end
-        end
+  local technology = data.raw.technology[technology_name]
+  local index = -1
+  local cnt = 0
+  if technology and technology.effects then
+    for i, effect in pairs(technology.effects) do
+      if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
+        index = i
+        cnt = cnt + 1
+      end
     end
+    if index > -1 then
+      table.remove(technology.effects, index)
+      if cnt > 1 then -- not over yet, do it again
+        util.remove_recipe_effect(technology_name, recipe_name)
+      end
+    end
+  end
 end
 
 -- Set technology ingredients
@@ -422,7 +451,9 @@ end
 
 -- Add a given quantity of ingredient to a given recipe
 function util.add_or_add_to_ingredient(recipe_name, ingredient, quantity, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] and data.raw.item[ingredient] then
     me.add_modified(recipe_name)
     add_or_add_to_ingredient(data.raw.recipe[recipe_name], ingredient, quantity)
@@ -437,13 +468,15 @@ function add_or_add_to_ingredient(recipe, ingredient, quantity)
         return
       end
     end
-    table.insert(recipe.ingredients, {ingredient, quantity})
+    table.insert(recipe.ingredients, { ingredient, quantity })
   end
 end
 
 -- Add a given quantity of ingredient to a given recipe
 function util.add_ingredient(recipe_name, ingredient, quantity, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   local is_fluid = not not data.raw.fluid[ingredient]
   if data.raw.recipe[recipe_name] and (data.raw.item[ingredient] or is_fluid) then
     me.add_modified(recipe_name)
@@ -459,16 +492,18 @@ function add_ingredient(recipe, ingredient, quantity, is_fluid)
       end
     end
     if is_fluid then
-      table.insert(recipe.ingredients, {type="fluid", name=ingredient, amount=quantity})
+      table.insert(recipe.ingredients, { type = "fluid", name = ingredient, amount = quantity })
     else
-      table.insert(recipe.ingredients, {type="item", name=ingredient, amount=quantity})
+      table.insert(recipe.ingredients, { type = "item", name = ingredient, amount = quantity })
     end
   end
 end
 
 -- Add a given ingredient prototype to a given recipe
 function util.add_ingredient_raw(recipe_name, ingredient, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] and (data.raw.item[ingredient.name] or data.raw.item[ingredient[1]]) then
     me.add_modified(recipe_name)
     add_ingredient_raw(data.raw.recipe[recipe_name], ingredient)
@@ -478,10 +513,10 @@ end
 function add_ingredient_raw(recipe, ingredient)
   if recipe ~= nil and recipe.ingredients ~= nil then
     for i, existing in pairs(recipe.ingredients) do
-      if (
-          (existing[1] and (existing[1] == ingredient[1] or existing[1] == ingredient.name)) or 
-          (existing.name and (existing.name == ingredient[1] or existing.name == ingredient.name))
-      ) then
+      if
+        (existing[1] and (existing[1] == ingredient[1] or existing[1] == ingredient.name))
+        or (existing.name and (existing.name == ingredient[1] or existing.name == ingredient.name))
+      then
         return
       end
     end
@@ -491,7 +526,9 @@ end
 
 -- Set an ingredient to a given quantity
 function util.set_ingredient(recipe_name, ingredient, quantity, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] and data.raw.item[ingredient] then
     local is_fluid = not not data.raw.fluid[ingredient]
     me.add_modified(recipe_name)
@@ -510,28 +547,29 @@ function set_ingredient(recipe, ingredient, quantity, is_fluid)
       end
     end
     if is_fluid then
-      table.insert(recipe.ingredients, {type="fluid", name=ingredient, amount=quantity})
+      table.insert(recipe.ingredients, { type = "fluid", name = ingredient, amount = quantity })
     else
-      table.insert(recipe.ingredients, {type="item", name=ingredient, amount=quantity})
+      table.insert(recipe.ingredients, { type = "item", name = ingredient, amount = quantity })
     end
   end
 end
--- Add a given quantity of product to a given recipe. 
+-- Add a given quantity of product to a given recipe.
 -- Only works for recipes with multiple products
 function util.add_product(recipe_name, product, options)
-  if not should_force(options) and bypass(recipe_name) then return end
-  if data.raw.recipe[recipe_name] and
-  (data.raw.item[product.name] or data.raw.fluid[product.name]) then
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
+  if data.raw.recipe[recipe_name] and (data.raw.item[product.name] or data.raw.fluid[product.name]) then
     add_product(data.raw.recipe[recipe_name], product)
   end
 end
 
 function add_product(recipe, product)
   if recipe ~= nil then
-      if recipe.results == nil then
-        recipe.results = {}
-      end
-      table.insert(recipe.results, product)
+    if recipe.results == nil then
+      recipe.results = {}
+    end
+    table.insert(recipe.results, product)
   end
 end
 
@@ -541,8 +579,12 @@ function util.get_ingredient_amount(recipe_name, ingredient_name)
   if recipe then
     if recipe.ingredients then
       for i, ingredient in pairs(recipe.ingredients) do
-        if ingredient[1] == ingredient_name then return ingredient[2] end
-        if ingredient.name == ingredient_name then return ingredient.amount end
+        if ingredient[1] == ingredient_name then
+          return ingredient[2]
+        end
+        if ingredient.name == ingredient_name then
+          return ingredient.amount
+        end
       end
     end
     return 1
@@ -552,13 +594,19 @@ end
 
 -- Get the amount of the result, will check base/normal not expensive
 function util.get_amount(recipe_name, product)
-  if not product then product = recipe_name end
+  if not product then
+    product = recipe_name
+  end
   local recipe = data.raw.recipe[recipe_name]
   if recipe then
     if recipe.results then
       for i, result in pairs(recipe.results) do
-        if result[1] == product then return result[2] end
-        if result.name == product then return result.amount end
+        if result[1] == product then
+          return result[2]
+        end
+        if result.name == product then
+          return result.amount
+        end
       end
     elseif recipe.result_count then
       return recipe.result_count
@@ -570,11 +618,13 @@ end
 
 -- Get the count of results
 function util.get_result_count(recipe_name, product)
-  if not product then product = recipe_name end
+  if not product then
+    product = recipe_name
+  end
   local recipe = data.raw.recipe[recipe_name]
   if recipe then
     if recipe.results then
-      return #(recipe.results)
+      return #recipe.results
     end
     return 1
   end
@@ -584,7 +634,9 @@ end
 -- Replace one ingredient with another in a recipe
 --    Use amount to set an amount. If that amount is a multiplier instead of an exact amount, set multiply true.
 function util.replace_ingredient(recipe_name, old, new, amount, multiply, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] and (data.raw.item[new] or data.raw.fluid[new]) then
     me.add_modified(recipe_name)
     replace_ingredient(data.raw.recipe[recipe_name], old, new, amount, multiply)
@@ -592,15 +644,15 @@ function util.replace_ingredient(recipe_name, old, new, amount, multiply, option
 end
 
 function replace_ingredient(recipe, old, new, amount, multiply)
-	if recipe ~= nil and recipe.ingredients ~= nil then
+  if recipe ~= nil and recipe.ingredients ~= nil then
     for i, existing in pairs(recipe.ingredients) do
       if existing[1] == new or existing.name == new then
         return
       end
     end
-		for i, ingredient in pairs(recipe.ingredients) do 
-			if ingredient.name == old then 
-        ingredient.name = new 
+    for i, ingredient in pairs(recipe.ingredients) do
+      if ingredient.name == old then
+        ingredient.name = new
         if amount then
           if multiply then
             ingredient.amount = amount * ingredient.amount
@@ -609,7 +661,7 @@ function replace_ingredient(recipe, old, new, amount, multiply)
           end
         end
       end
-			if ingredient[1] == old then 
+      if ingredient[1] == old then
         ingredient[1] = new
         if amount then
           if multiply then
@@ -619,13 +671,15 @@ function replace_ingredient(recipe, old, new, amount, multiply)
           end
         end
       end
-		end
-	end
+    end
+  end
 end
 
 -- Remove an ingredient from a recipe
 function util.remove_ingredient(recipe_name, old, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] then
     me.add_modified(recipe_name)
     remove_ingredient(data.raw.recipe[recipe_name], old)
@@ -634,8 +688,8 @@ end
 
 function remove_ingredient(recipe, old)
   index = -1
-	if recipe ~= nil and recipe.ingredients ~= nil then
-		for i, ingredient in pairs(recipe.ingredients) do 
+  if recipe ~= nil and recipe.ingredients ~= nil then
+    for i, ingredient in pairs(recipe.ingredients) do
       if ingredient.name == old or ingredient[1] == old then
         index = i
         break
@@ -649,8 +703,10 @@ end
 
 -- Replace an amount of a product, leaving at least 1 of old
 function util.replace_some_product(recipe_name, old, old_amount, new, new_amount, options)
-  if not should_force(options) and bypass(recipe_name) then return end
-  local is_fluid = not not data.raw.fluid[new]  -- NOTE CURRENTLY UNUSUED
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
+  local is_fluid = not not data.raw.fluid[new] -- NOTE CURRENTLY UNUSUED
   if data.raw.recipe[recipe_name] and (data.raw.item[new] or is_fluid) then
     me.add_modified(recipe_name)
     replace_some_product(data.raw.recipe[recipe_name], old, old_amount, new, new_amount, is_fluid)
@@ -658,8 +714,10 @@ function util.replace_some_product(recipe_name, old, old_amount, new, new_amount
 end
 
 function replace_some_product(recipe, old, old_amount, new, new_amount, is_fluid)
-	if recipe ~= nil then
-    if recipe.result == new then return end
+  if recipe ~= nil then
+    if recipe.result == new then
+      return
+    end
     if recipe.results then
       for i, existing in pairs(recipe.results) do
         if existing.name == new then
@@ -667,18 +725,20 @@ function replace_some_product(recipe, old, old_amount, new, new_amount, is_fluid
         end
       end
     end
-    add_product(recipe, {type=is_fluid and "fluid" or "item", name=new, amount=new_amount})
-		for i, product in pairs(recipe.results) do 
-			if product.name == old then
+    add_product(recipe, { type = is_fluid and "fluid" or "item", name = new, amount = new_amount })
+    for i, product in pairs(recipe.results) do
+      if product.name == old then
         product.amount = math.max(1, product.amount - old_amount)
       end
-		end
-	end
+    end
+  end
 end
 
 -- Replace an amount of an ingredient in a recipe. Keep at least 1 of old.
 function util.replace_some_ingredient(recipe_name, old, old_amount, new, new_amount, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   local is_fluid = not not data.raw.fluid[new]
   if data.raw.recipe[recipe_name] and (data.raw.item[new] or is_fluid) then
     me.add_modified(recipe_name)
@@ -687,31 +747,33 @@ function util.replace_some_ingredient(recipe_name, old, old_amount, new, new_amo
 end
 
 function replace_some_ingredient(recipe, old, old_amount, new, new_amount, is_fluid)
-	if recipe ~= nil and recipe.ingredients ~= nil then
+  if recipe ~= nil and recipe.ingredients ~= nil then
     for i, existing in pairs(recipe.ingredients) do
       if existing[1] == new or existing.name == new then
         return
       end
     end
-		for i, ingredient in pairs(recipe.ingredients) do 
-			if ingredient.name == old then
+    for i, ingredient in pairs(recipe.ingredients) do
+      if ingredient.name == old then
         ingredient.amount = math.max(1, ingredient.amount - old_amount)
       end
-			if ingredient[1] == old then
+      if ingredient[1] == old then
         ingredient[2] = math.max(1, ingredient[2] - old_amount)
       end
-		end
+    end
     add_ingredient(recipe, new, new_amount, is_fluid)
-	end
+  end
 end
 
--- set the amount of a product. 
+-- set the amount of a product.
 function util.set_product_amount(recipe_name, product, amount, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   me.add_modified(recipe_name)
   if data.raw.recipe[recipe_name] then
     set_product_amount(data.raw.recipe[recipe_name], product, amount)
-	end
+  end
 end
 
 function set_product_amount(recipe, product, amount)
@@ -726,8 +788,8 @@ function set_product_amount(recipe, product, amount)
             result.amount = amount
           end
           if result.amount_min ~= nil then
-            result.amount_min =  nil
-            result.amount_max =  nil
+            result.amount_min = nil
+            result.amount_max = nil
             result.amount = amount
           end
         end
@@ -745,11 +807,13 @@ end
 
 -- multiply the cost, energy, and results of a recipe by a multiple
 function util.multiply_recipe(recipe_name, multiple, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   me.add_modified(recipe_name)
   if data.raw.recipe[recipe_name] then
     multiply_recipe(data.raw.recipe[recipe_name], multiple)
-	end
+  end
 end
 
 function multiply_recipe(recipe, multiple)
@@ -801,8 +865,7 @@ end
 
 -- Returns true if a recipe has an ingredient
 function util.has_ingredient(recipe_name, ingredient)
-  return data.raw.recipe[recipe_name] and
-        has_ingredient(data.raw.recipe[recipe_name], ingredient)
+  return data.raw.recipe[recipe_name] and has_ingredient(data.raw.recipe[recipe_name], ingredient)
 end
 
 function has_ingredient(recipe, ingredient)
@@ -818,7 +881,9 @@ end
 
 -- Remove a product from a recipe, WILL NOT remove the only product
 function util.remove_product(recipe_name, old, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   me.add_modified(recipe_name)
   if data.raw.recipe[recipe_name] then
     remove_product(data.raw.recipe[recipe_name], old)
@@ -827,8 +892,8 @@ end
 
 function remove_product(recipe, old)
   index = -1
-	if recipe ~= nil and recipe.results ~= nil then
-		for i, result in pairs(recipe.results) do 
+  if recipe ~= nil and recipe.results ~= nil then
+    for i, result in pairs(recipe.results) do
       if result.name == old or result[1] == old then
         index = i
         break
@@ -841,7 +906,9 @@ function remove_product(recipe, old)
 end
 
 function util.set_main_product(recipe_name, product, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] then
     set_main_product(data.raw.recipe[recipe_name], product)
   end
@@ -855,7 +922,9 @@ end
 
 -- Replace one product with another in a recipe
 function util.replace_product(recipe_name, old, new, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] then
     replace_product(data.raw.recipe[recipe_name], old, new)
   end
@@ -868,7 +937,9 @@ function replace_product(recipe, old, new)
     end
     if recipe.results then
       for i, result in pairs(recipe.results) do
-        if result.name == old then result.name = new end
+        if result.name == old then
+          result.name = new
+        end
       end
     end
   end
@@ -876,13 +947,13 @@ end
 
 -- Remove an element of type t and name from data.raw
 function util.remove_raw(t, name)
-  if not data.raw[t] then 
-    log(t.." not found in data.raw")
+  if not data.raw[t] then
+    log(t .. " not found in data.raw")
     return
   end
   if data.raw[t][name] then
     for i, elem in pairs(data.raw[t]) do
-      if elem.name == name then 
+      if elem.name == name then
         data.raw[t][i] = nil
         break
       end
@@ -892,11 +963,13 @@ end
 
 -- Set energy required
 function util.set_recipe_time(recipe_name, time, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   me.add_modified(recipe_name)
   if data.raw.recipe[recipe_name] then
     set_recipe_time(data.raw.recipe[recipe_name], time)
-	end
+  end
 end
 
 function set_recipe_time(recipe, time)
@@ -909,11 +982,13 @@ end
 
 -- Multiply energy required
 function util.multiply_time(recipe_name, factor, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   me.add_modified(recipe_name)
   if data.raw.recipe[recipe_name] then
     multiply_time(data.raw.recipe[recipe_name], factor)
-	end
+  end
 end
 
 function multiply_time(recipe, factor)
@@ -926,11 +1001,13 @@ end
 
 -- Add to energy required
 function util.add_time(recipe_name, amount, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   me.add_modified(recipe_name)
   if data.raw.recipe[recipe_name] then
     add_time(data.raw.recipe[recipe_name], amount)
-	end
+  end
 end
 
 function add_time(recipe, amount)
@@ -943,10 +1020,12 @@ end
 
 -- Set recipe category
 function util.set_category(recipe_name, category, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe_name) then
+    return
+  end
   if data.raw.recipe[recipe_name] and data.raw["recipe-category"][category] then
     me.add_modified(recipe_name)
-    data.raw.recipe[recipe_name].category = category
+    data.raw.recipe[recipe_name].categories = { category }
   end
 end
 
@@ -1259,7 +1338,7 @@ function util.sum_products(recipe_name)
       elseif result.amount then amt = result.amount
       elseif result.amount_min then amt = (result.amount_min + result.amount_max)/2
       end
-      if result.probability then amt = amt * result.probability end
+      if result.independent_probability then amt = amt * result.independent_probability end
       sum = sum + amt
     end
     return sum

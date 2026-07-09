@@ -6,7 +6,7 @@ data:extend({
         name = 'el_purify_aluminum_recipe',
         type = 'recipe',
         enabled = 'false',
-        category = 'el_purifier_category',
+        categories = {'el_purifier_category'},
         main_product = 'el_dirty_water',
         ingredients = {
             {type="fluid", name="water", amount=50},
