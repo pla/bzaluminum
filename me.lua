@@ -21,7 +21,8 @@ end
 function me.byproduct()
   return me.get_setting("bzaluminum-byproduct") and not me.get_setting("bz-no-byproduct")
 end
-
+---@param name string
+---@return any
 function me.get_setting(name)
   if settings.startup[name] == nil then
     return nil

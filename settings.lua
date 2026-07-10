@@ -10,7 +10,7 @@ data:extend({
 		type = "bool-setting",
 		name = "bzaluminum-byproduct",
 		setting_type = "startup",
-    default_value = true,
+    default_value = false,
 	},
   {
 		type = "bool-setting",

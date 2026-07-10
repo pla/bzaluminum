@@ -1,23 +1,24 @@
-local util = require("data-util");
+local util = require("__bzaluminum__.data-util")
 
 -- most small electric poles handled in burner phase updates.
 
 -- this also handles modded "large-electric-pole" recipe for basic cases
 
 -- vanilla 
-util.replace_ingredient("medium-electric-pole", "copper-plate", "acsr-cable")
-util.replace_ingredient("big-electric-pole", "copper-plate", "acsr-cable")
-util.replace_ingredient("large-electric-pole", "copper-plate", "acsr-cable")
-util.replace_ingredient("substation", "copper-plate", "acsr-cable")
+util.replace_ingredient("medium-electric-pole", "copper-cable", "acsr-cable")
+util.replace_ingredient("big-electric-pole", "copper-cable", "acsr-cable")
+util.replace_ingredient("large-electric-pole", "copper-cable", "acsr-cable")
+util.replace_ingredient("substation", "copper-cable", "acsr-cable")
 util.add_ingredient("substation", "aluminum-plate", 4)
 
 -- aai or k2
 if mods["aai-industry"] or mods.Krastorio2 then
   util.add_prerequisite("medium-electric-pole", "reinforced-cable")
-  util.replace_ingredient("medium-electric-pole", "copper-cable", "acsr-cable")
-  util.replace_ingredient("big-electric-pole", "copper-cable", "acsr-cable")
-  util.replace_ingredient("large-electric-pole", "copper-cable", "acsr-cable")
-  util.replace_ingredient("substation", "copper-cable", "acsr-cable")
+-- not needed in 2.0 everything is already copper-cable in vanilla
+--   util.replace_ingredient("medium-electric-pole", "copper-cable", "acsr-cable")
+--   util.replace_ingredient("big-electric-pole", "copper-cable", "acsr-cable")
+--   util.replace_ingredient("large-electric-pole", "copper-cable", "acsr-cable")
+--   util.replace_ingredient("substation", "copper-cable", "acsr-cable")
 end
 
 -- SE recycling

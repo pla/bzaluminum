@@ -400,7 +400,7 @@ function util.check_unlock(technology_name, recipe)
   local technology = data.raw.technology[technology_name]
   if technology and technology.effects then
     for i, effect in pairs(technology.effects) do
-      if effect.type == "unlock-recipe" and effect.recipe == recipe_name then
+      if effect.type == "unlock-recipe" and effect.recipe == recipe then
         return true
       end
     end
@@ -608,8 +608,6 @@ function util.get_amount(recipe_name, product)
           return result.amount
         end
       end
-    elseif recipe.result_count then
-      return recipe.result_count
     end
     return 1
   end
@@ -1056,7 +1054,6 @@ function util.add_icon(recipe_name, icon, options)
           data.raw.recipe[recipe_name].icons = {{
             icon=data.raw.recipe[recipe_name].icon,
             icon_size=data.raw.recipe[recipe_name].icon_size,
-            icon_mipmaps=data.raw.recipe[recipe_name].icon_mipmaps,
           }}
           data.raw.recipe[recipe_name].icon = nil
           data.raw.recipe[recipe_name].icon_size = nil
@@ -1117,7 +1114,7 @@ function util.add_crafting_category(entity_type, entity, category)
 end
 
 function util.add_to_ingredient(recipe, ingredient, amount, options)
-  if not should_force(options) and bypass(recipe_name) then return end
+  if not should_force(options) and bypass(recipe) then return end
   if data.raw.recipe[recipe] then
     add_to_ingredient(data.raw.recipe[recipe], ingredient, amount)
   end
@@ -1330,7 +1327,6 @@ function util.sum_products(recipe_name)
   -- this is going to end up approximate in some cases, integer division is probs fine
   if data.raw.recipe[recipe_name] then
     local recipe = data.raw.recipe[recipe_name]
-    if not recipe.results then return recipe.result_count end
     local sum = 0
     for i, result in pairs(recipe.results) do
       local amt = 0
